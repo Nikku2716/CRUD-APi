@@ -1,3 +1,11 @@
+## Swagger UI
+
+The full CRUD cycle (create, list, update, delete) was tested through Swagger UI's "Try it out" feature at `/docs`.
+
+<p align="center">
+  <img src="screenshots/screenshot_api.png" alt="BlackHawk dashboard screenshot" width="100%">
+</p>
+
 # Task API
 
 A simple CRUD (Create, Read, Update, Delete) API for managing a to-do list, built with **Node.js** and **Express**. Data is stored in memory — it resets whenever the server restarts.

@@ -9,6 +9,25 @@ let tasks = [
   { id: 3, title: "Write assignment", done: false }
 ];
 
+app.use(express.json()); // it lets Express parse JSON request bodies
+
+app.post('/tasks', (req, res) => {
+  const { title } = req.body;
+
+  if (!title || title.trim() === '') {
+    return res.status(400).json({ error: "Title is required" });
+  }
+
+  const newTask = {
+    id: tasks.length ? Math.max(...tasks.map(t => t.id)) + 1 : 1,
+    title: title,
+    done: false
+  };
+
+  tasks.push(newTask);
+  res.status(201).json(newTask);
+});
+
 app.get('/tasks', (req, res) => {
   res.json(tasks);
 });

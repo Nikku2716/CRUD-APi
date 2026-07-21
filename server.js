@@ -32,6 +32,36 @@ app.get('/tasks', (req, res) => {
   res.json(tasks);
 });
 
+app.put('/tasks/:id', (req, res) => {
+  const task = tasks.find(t => t.id === Number(req.params.id));
+
+  if (!task){
+    return res.status(404).json({error: `Task ${req.params.id} is not found` })
+  }
+
+  const { title , done} = req.body;
+
+  if(!title == undefined){
+    task.title = title;
+  }
+  
+  if (!done == undefined){
+    task.done = done;
+  }
+  res.json(task);
+  
+});
+
+app.delete('/tasks/:id', (req, res) => {
+  const index = tasks.findIndex(t => t.id === Number(req.params.id));
+  if (index === -1){
+    res.status(404).json({error: `Task ${req.params.id} is not found`})
+  }
+  tasks.splice(index,1);
+  res.status(204).send();
+});
+
+
 app.get('/tasks/:id', (req, res) => {
   const task = tasks.find(t => t.id === Number(req.params.id));
   if (!task) {

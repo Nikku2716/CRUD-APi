@@ -14,7 +14,7 @@ db.exec(`
   )
 `);
 
-// Seed 3 example tasks only if the table is currently empty
+
 const row = db.prepare('SELECT COUNT(*) AS count FROM tasks').get();
 
 if (row.count === 0) {
@@ -28,12 +28,6 @@ if (row.count === 0) {
 
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec));
 
-
-let tasks = [
-  { id: 1, title: "Buy milk", done: false },
-  { id: 2, title: "Walk the dog", done: true },
-  { id: 3, title: "Write assignment", done: false }
-];
 
 app.use(express.json()); // it lets Express parse JSON request bodies
 
@@ -55,27 +49,18 @@ app.post('/tasks', (req, res) => {
 });
 
 app.get('/tasks', (req, res) => {
+  const tasks = db.prepare('SELECT * FROM tasks').all();
   res.json(tasks);
 });
 
-app.put('/tasks/:id', (req, res) => {
-  const task = tasks.find(t => t.id === Number(req.params.id));
+app.get('/tasks/:id', (req, res) => {
+  const task = db.prepare('SELECT * FROM tasks WHERE id = ?').get(req.params.id);
 
-  if (!task){
-    return res.status(404).json({error: `Task ${req.params.id} is not found` })
+  if (!task) {
+    return res.status(404).json({ error: `Task ${req.params.id} not found` });
   }
 
-  const { title , done} = req.body;
-
-  if(!title == undefined){
-    task.title = title;
-  }
-  
-  if (!done == undefined){
-    task.done = done;
-  }
   res.json(task);
-  
 });
 
 app.delete('/tasks/:id', (req, res) => {
@@ -87,14 +72,6 @@ app.delete('/tasks/:id', (req, res) => {
   res.status(204).send();
 });
 
-
-app.get('/tasks/:id', (req, res) => {
-  const task = tasks.find(t => t.id === Number(req.params.id));
-  if (!task) {
-    return res.status(404).json({ error: `Task ${req.params.id} not found` });
-  }
-  res.json(task);
-});
 
 app.get('/' , (req,res) => {
     res.json({

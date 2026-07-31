@@ -45,6 +45,8 @@ app.post('/tasks', (req, res) => {
 
   res.status(201).json(newTask);
 });
+
+
 app.get('/tasks', (req, res) => {
   const tasks = db.prepare('SELECT * FROM tasks').all();
   res.json(tasks);
